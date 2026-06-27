@@ -1,7 +1,16 @@
 #!/bin/bash
-# 自启动脚本 仅作参考
-
 set +e
+
+# Launch primary daemon directly in the background
+awww-daemon >/dev/null 2>&1 &
+sleep 0.5
+
+# Launch the mango namespace daemon directly in the background
+awww-daemon --namespace mango >/dev/null 2>&1 &
+sleep 0.5
+
+# Random Wallpaper at start
+spawn-sh-at-startup "sleep 1 && bash ~/.config/mango/scripts/wallpaper_random.sh"
 
 # some env can't auto run the portal, so need this
 /usr/lib/xdg-desktop-portal-wlr  >/dev/null 2>&1 &
@@ -13,7 +22,8 @@ swaync -c ~/.config/mango/swaync/config.jsonc -s ~/.config/mango/swaync/style.cs
 wlsunset -T 3501 -t 3500 >/dev/null 2>&1 &
 
 # wallpaper
-swaybg -i ~/.config/mango/wallpaper/wallpaper.png >/dev/null 2>&1 &
+#swaybg -i ~/.config/mango/wallpaper/wallpaper.png >/dev/null 2>&1 &
+#swaybg -i ~/Pictures/Wallpapers/cartoon.jpg >/dev/null 2>&1 &
 
 # top bar
 waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
