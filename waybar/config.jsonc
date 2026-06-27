@@ -75,9 +75,15 @@
         "spacing": 10
     },
     "clock": {
-      "format": " {:%H:%M}",
-      "format-alt": " {:L%A, %b %d}",
-      "tooltip-format": "{:%Y}",
+      "format": " {:%I:%M %p}",
+      "format-alt": " {:L%a, %b %d}",
+      // "tooltip-format": "{:%Y}",
+      "tooltip-format": "<big>{:%A %d}</big>\n<tt>{calendar}</tt>",
+      "calendar": {
+        "mode": "month",
+        "weeks-pos": "right",
+        "on-scroll": 1,
+         },
     },
     "cpu": {
       "interval": 2,
@@ -165,3 +171,4 @@
       "escape": true
     },
 }
+
