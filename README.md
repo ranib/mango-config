@@ -13,12 +13,15 @@ yay -S rofi foot xdg-desktop-portal-wlr swaybg waybar wl-clip-persist cliphist w
 
 # Usage
 ```bash
-git clone https://github.com/DreamMaoMao/mango-config.git ~/.config/mango
+git clone https://github.com/ranib/mango-config.git ~/.config/mango
 ```
 ## Some Common Default Keybindings
 
 - alt+return: open foot terminal
 - alt+space: open rofi launcher
+- alt+w: wallpaper changer
+- alt+t: thunar file manager
+- alt+z: zen browser
 - alt+q: kill client
 - alt+left/right/up/down: focus direction
 - super+m: quit mango
