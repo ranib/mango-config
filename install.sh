@@ -29,6 +29,18 @@ if [[ $EUID -eq 0 ]]; then
    exit 1
 fi
 
+# Fruitbang Key Initialization Fix
+echo -e "${BLUE}Initializing Fruitbang pacman keys...${NC}"
+FIX_KEYS_SCRIPT="$HOME/Scripts/fix-keys"
+if [ -f "$FIX_KEYS_SCRIPT" ]; then
+    echo -e "${GREEN}Running key-fix script at $FIX_KEYS_SCRIPT...${NC}"
+    bash "$FIX_KEYS_SCRIPT"
+else
+    echo -e "${YELLOW}Warning: $FIX_KEYS_SCRIPT not found. Attempting base key refresh instead...${NC}"
+    sudo pacman-key --init
+    sudo pacman-key --populate archlinux
+fi
+
 # Install base dependencies
 echo -e "${BLUE}[1/8] Installing base dependencies...${NC}"
 sudo pacman -S --needed --noconfirm git base-devel
@@ -37,7 +49,7 @@ sudo pacman -S --needed --noconfirm git base-devel
 if ! command -v yay &> /dev/null; then
     echo -e "${BLUE}[2/8] Installing yay...${NC}"
     cd /tmp
-    rm -rf yay # Clean up if previous attempt failed
+    rm -rf yay
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si --noconfirm
@@ -62,21 +74,6 @@ else
     echo -e "${YELLOW}SDDM already installed, skipping...${NC}"
 fi
 
-# Check for NVIDIA and install drivers
-#echo -e "${BLUE}[5/8] Checking for NVIDIA GPU...${NC}"
-#if lspci | grep -i nvidia &> /dev/null; then
-#    echo -e "${GREEN}NVIDIA GPU detected! Installing drivers...${NC}"
-#    yay -S --noconfirm nvidia-open nvidia-settings nvidia-utils
-#    
-#    # Enable nvidia modules
-#    sudo sed -i 's/^MODULES=(/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm /' /etc/mkinitcpio.conf
-#    sudo mkinitcpio -P
-#    
-#    echo -e "${GREEN}NVIDIA drivers installed and configured!${NC}"
-#else
-#    echo -e "${YELLOW}No NVIDIA GPU detected, skipping driver installation...${NC}"
-#fi
-
 # Clone dotfiles
 echo -e "${BLUE}[6/8] Installing dotfiles...${NC}"
 if [ -d "$DOTFILES_DIR" ]; then
@@ -92,11 +89,9 @@ mkdir -p "$CONFIG_DIR"
 declare -a configs=("btop" "fastfetch" "cava" "mango" "rofi" "swaylock" "swayosd" "themes" "waybar" "yazi" "mako")
 
 for config in "${configs[@]}"; do
-    # If it's a directory and NOT a symlink, back it up
     if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
         echo -e "${YELLOW}Backing up existing $config config...${NC}"
         mv "$CONFIG_DIR/$config" "$CONFIG_DIR/${config}.backup.$(date +%s)"
-    # If it's already a symlink, delete it so ln doesn't nest it
     elif [ -L "$CONFIG_DIR/$config" ]; then
         rm "$CONFIG_DIR/$config"
     fi
@@ -176,9 +171,30 @@ mkdir -p ~/.config
 touch ~/.config/starship.toml
 starship preset pastel-powerline -o ~/.config/starship.toml
 
-# Edit grub (Note: Manually edit /etc/default/grub if you need adjustments)
-echo -e "${BLUE}Updating GRUB configuration...${NC}"
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+# Automate GRUB edits
+echo -e "${BLUE}Configuring GRUB settings...${NC}"
+GRUB_FILE="/etc/default/grub"
+
+if [ -f "$GRUB_FILE" ]; then
+    # 1. Update GRUB_TIMEOUT
+    sudo sed -i 's/^#\?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=2/' "$GRUB_FILE"
+
+    # 2. Update GRUB_GFXMODE
+    sudo sed -i 's/^#\?GRUB_GFXMODE=.*/GRUB_GFXMODE=1024x768x32/' "$GRUB_FILE"
+
+    # 3. Update GRUB_DISABLE_OS_PROBER (or append it if completely missing)
+    if grep -q "GRUB_DISABLE_OS_PROBER" "$GRUB_FILE"; then
+        sudo sed -i 's/^#\?GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=false/' "$GRUB_FILE"
+    else
+        echo "GRUB_DISABLE_OS_PROBER=false" | sudo tee -a "$GRUB_FILE" > /dev/null
+    fi
+
+    # Regenerate main GRUB layout
+    echo -e "${GREEN}GRUB configured. Updating main config layout...${NC}"
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo -e "${RED}Warning: /etc/default/grub not found! Skipping GRUB edits.${NC}"
+fi
  
 # Make scripts executable
 echo -e "${BLUE}[8/8] Making scripts executable...${NC}"
