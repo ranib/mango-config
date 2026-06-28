@@ -7,7 +7,7 @@ my mango config
 
 
 # dependence
-I use <a href="https://archbang.org/2026/05/22/want-some-mango-then-try-out-fruitbang/">Fruitbang</a> distro. Pacman will not work until keys are initialized. Run the following: ~/Scripts/fix-keys
+I use <a href="https://archbang.org/2026/05/22/want-some-mango-then-try-out-fruitbang/">Fruitbang</a> distro. Pacman will not work until keys are initialized. Run the following: ~/Scripts/fix-keys <b>(I have included this in install script)</>
 
 ## Installation
 
