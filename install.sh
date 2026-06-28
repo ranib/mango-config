@@ -155,13 +155,18 @@ if pacman -Qq firefox &> /dev/null; then
     sudo pacman -Rns --noconfirm firefox
 fi
 
-# Make fastfetch look like Archcraft
+# Make fastfetch look like Archcraft but force the Arch ASCII Logo
 echo -e "${BLUE}Configuring Fastfetch...${NC}"
 cd /tmp
 rm -rf fastfetch-config
 git clone https://github.com/ExploitCraft/fastfetch-config.git
 mkdir -p ~/.config/fastfetch/images
 cp -f fastfetch-config/config.jsonc ~/.config/fastfetch/config.jsonc
+
+# Automatically replace the custom logo source with the official Arch ASCII logo
+sed -i 's/"source":.*/"source": "arch",/' ~/.config/fastfetch/config.jsonc
+sed -i 's/"type":.*/"type": "auto",/' ~/.config/fastfetch/config.jsonc
+
 cd ~
 
 # Install starship for terminal    
