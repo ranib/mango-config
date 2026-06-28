@@ -14,12 +14,12 @@ CONFIG_DIR="$HOME/.config"
 
 echo -e "${GREEN}"
 cat << "EOF"
- __  __                      _ 
-|  \/  |  __ _ _ __   __ _  (_)
-| |\/| | / _` | '_ \ / _` | | |
-| |  | || (_| | | | | (_| | | |
-|_|  |_| \__,_|_| |_|\__, | |_|
-                     |___/     
+ __  __                                
+|  \/  |  __ _  _ __    __ _   ___     
+| |\/| | / _` || '_ \  / _` | / _ \    
+| |  | || (_| || | | || (_| || (_) |   
+|_|  |_| \__,_||_| |_| \__, | \___/    
+                       |___/           
 EOF
 echo -e "${NC}"
 
@@ -172,9 +172,15 @@ cd ~
 # Install starship for terminal    
 echo -e "${BLUE}Installing Starship prompt...${NC}"
 curl -sS https://starship.rs/install.sh | sh -s -- -y
-mkdir -p ~/.config
-touch ~/.config/starship.toml
-starship preset pastel-powerline -o ~/.config/starship.toml
+
+# Ensure config directory exists for the local user
+mkdir -p "$HOME/.config"
+
+# Generate the Pastel Powerline configuration natively
+echo -e "${BLUE}Applying Pastel Powerline preset...${NC}"
+starship preset pastel-powerline -o "$HOME/.config/starship.toml"
+
+echo -e "${GREEN}✓ Starship initialized with Pastel Powerline!${NC}"
 
 # Automate GRUB edits
 echo -e "${BLUE}Configuring GRUB settings...${NC}"
