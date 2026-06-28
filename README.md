@@ -7,8 +7,16 @@ my mango config
 
 
 # dependence
-<a href="https://archbang.org/2026/05/22/want-some-mango-then-try-out-fruitbang/">Fruitbang</a> distro
+I use <a href="https://archbang.org/2026/05/22/want-some-mango-then-try-out-fruitbang/">Fruitbang</a> distro. Pacman will not work until keys are initialized. Run the following: ~/Scripts/fix-keys
 
+## Installation
+
+### One-liner
+```bash
+sudo pacman -Syu --needed --noconfirm git && cd ~ && git clone https://github.com/ranib/mango-config.git && bash ~/mango-config/install.sh
+```
+
+### Manual (incomplete compared to install script)
 ```bash
 yay -S rofi foot xdg-desktop-portal-wlr swaybg waybar wl-clip-persist cliphist wl-clipboard wlsunset xfce-polkit swaync pamixer wlr-dpms sway-audio-idle-inhibit-git swayidle dimland-git brightnessctl swayosd wlr-randr grim slurp satty swaylock-effects-git wlogout sox
 ```
