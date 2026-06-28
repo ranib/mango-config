@@ -155,7 +155,7 @@ if pacman -Qq firefox &> /dev/null; then
     sudo pacman -Rns --noconfirm firefox
 fi
 
-# Make fastfetch look like Archcraft but force the Arch ASCII Logo
+# Make fastfetch look like Archcraft with a vibrant multicolored Arch ASCII Logo
 echo -e "${BLUE}Configuring Fastfetch...${NC}"
 cd /tmp
 rm -rf fastfetch-config
@@ -163,9 +163,8 @@ git clone https://github.com/ExploitCraft/fastfetch-config.git
 mkdir -p ~/.config/fastfetch/images
 cp -f fastfetch-config/config.jsonc ~/.config/fastfetch/config.jsonc
 
-# Automatically replace the custom logo source with the official Arch ASCII logo
-sed -i 's/"source":.*/"source": "arch",/' ~/.config/fastfetch/config.jsonc
-sed -i 's/"type":.*/"type": "auto",/' ~/.config/fastfetch/config.jsonc
+# Safely inject a colorful 3-tone gradient (Cyan -> Blue -> Magenta) into the logo block
+sed -i 's/"logo": {/"logo": {\n        "type": "auto",\n        "source": "arch",\n        "color": {\n            "1": "cyan",\n            "2": "blue",\n            "3": "magenta"\n        },/g' ~/.config/fastfetch/config.jsonc
 
 cd ~
 
