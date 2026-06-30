@@ -87,7 +87,8 @@ git clone "$REPO_URL" "$DOTFILES_DIR"
 echo -e "${BLUE}Creating symlinks...${NC}"
 mkdir -p "$CONFIG_DIR"
 
-declare -a configs=("btop" "fastfetch" "cava" "mango" "rofi" "veila" "swayosd" "themes" "waybar" "yazi")
+# Clean array matching exactly what repo tracks
+declare -a configs=("btop" "fastfetch" "foot" "mango" "rofi" "swaync" "veila" "waybar" "wlogout")
 
 for config in "${configs[@]}"; do
     if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
