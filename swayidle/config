@@ -1,0 +1,13 @@
+# Core Configuration for Swayidle + Veila Layout
+
+# 1. Warn user at 4.5 minutes via SwayOSD brightness shifts
+timeout 270 'swayosd-client --brightness lower' resume 'swayosd-client --brightness raise'
+
+# 2. Trigger your consistent lock script cleanly at 5 minutes
+timeout 300 'bash ~/.config/mango/scripts/wallpaper_lockscreen.sh'
+
+# 3. Cut display power outputs 30 seconds after lock screens initialize
+timeout 330 'mango-msg output * power off' resume 'mango-msg output * power on'
+
+# 4. Enforce session locking prior to system deep-sleep initialization routines
+before-sleep 'bash ~/.config/mango/scripts/wallpaper_lockscreen.sh'
