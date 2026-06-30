@@ -75,30 +75,37 @@ else
     echo -e "${YELLOW}SDDM already installed, skipping...${NC}"
 fi
 
-# Clone dotfiles
-echo -e "${BLUE}[6/8] Installing dotfiles...${NC}"
-if [ -d "$DOTFILES_DIR" ]; then
-    echo -e "${YELLOW}Dotfiles directory exists, backing up...${NC}"
-    mv "$DOTFILES_DIR" "${DOTFILES_DIR}.backup.$(date +%s)"
-fi
-git clone "$REPO_URL" "$DOTFILES_DIR"
+# Clone or move dotfiles straight into the Mango directory
+echo -e "${BLUE}[6/8] Organizing Mango configuration directory...${NC}"
 
-# Backup existing config and create symlinks
-echo -e "${BLUE}Creating symlinks...${NC}"
+# If an old mango folder exists, back it up safely
+if [ -d "$CONFIG_DIR/mango" ]; then
+    echo -e "${YELLOW}Existing mango config folder found, creating backup...${NC}"
+    mv "$CONFIG_DIR/mango" "$CONFIG_DIR/mango.backup.$(date +%s)"
+fi
+
+# Clone your entire git repo directly to ~/.config/mango
+echo -e "${BLUE}Cloning your repository cleanly into $CONFIG_DIR/mango...${NC}"
+git clone "$REPO_URL" "$CONFIG_DIR/mango"
+
+# Create symlinks out to global folders ONLY for global standalone tools
+echo -e "${BLUE}Linking global terminal utility layouts...${NC}"
 mkdir -p "$CONFIG_DIR"
 
-# Clean array matching exactly what repo tracks
-declare -a configs=("btop" "fastfetch" "foot" "mango" "rofi" "swaync" "veila" "waybar" "wlogout")
+# Global system tools look for their setups at the root of ~/.config/
+declare -a global_configs=("btop" "fastfetch" "foot")
 
-for config in "${configs[@]}"; do
-    if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
-        echo -e "${YELLOW}Backing up existing $config config...${NC}"
-        mv "$CONFIG_DIR/$config" "$CONFIG_DIR/${config}.backup.$(date +%s)"
-    elif [ -L "$CONFIG_DIR/$config" ]; then
-        rm "$CONFIG_DIR/$config"
+for config in "${global_configs[@]}"; do
+    # If the folder exists inside your repo, link it to the global configuration root
+    if [ -d "$CONFIG_DIR/mango/$config" ]; then
+        if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
+            mv "$CONFIG_DIR/$config" "$CONFIG_DIR/${config}.backup.$(date +%s)"
+        elif [ -L "$CONFIG_DIR/$config" ]; then
+            rm "$CONFIG_DIR/$config"
+        fi
+        ln -sf "$CONFIG_DIR/mango/$config" "$CONFIG_DIR/$config"
+        echo -e "${GREEN}✓ Globally linked $config${NC}"
     fi
-    ln -sf "$DOTFILES_DIR/$config" "$CONFIG_DIR/$config"
-    echo -e "${GREEN}✓ Linked $config${NC}"
 done
 
 # Install required packages (Includes Core Essentials)
