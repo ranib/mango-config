@@ -92,11 +92,16 @@ git clone "$REPO_URL" "$CONFIG_DIR/mango"
 echo -e "${BLUE}Linking global terminal utility layouts...${NC}"
 mkdir -p "$CONFIG_DIR"
 
+# Create symlinks out to global folders ONLY for global standalone tools
+echo -e "${BLUE}Linking global terminal and system utility layouts...${NC}"
+mkdir -p "$CONFIG_DIR"
+
 # Global system tools look for their setups at the root of ~/.config/
-declare -a global_configs=("btop" "fastfetch" "foot")
+# Added "swayidle" to this deployment array
+declare -a global_configs=("btop" "fastfetch" "foot" "swayidle")
 
 for config in "${global_configs[@]}"; do
-    # If the folder exists inside your repo, link it to the global configuration root
+    # If the folder exists inside your nested repo layout, link it to the root
     if [ -d "$CONFIG_DIR/mango/$config" ]; then
         if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
             mv "$CONFIG_DIR/$config" "$CONFIG_DIR/${config}.backup.$(date +%s)"
