@@ -1,56 +1,60 @@
+/* ==========================================================================
+   wlogout Main Configuration Stylesheet
+   ========================================================================== */
+
+/* Core Layout Overlay Window */
 window {
-    font-family: HYLeMiaoTiJ,CaskaydiaCove Nerd Font, monospace;
-    font-size: 12pt;
-    font-weight: bold;
-    color: #f4dfcd; 
-    background-color: rgba(46, 42, 30, 0.69);
+    background-color: rgba(15, 17, 26, 0.85);
+    font-family: "JetBrainsMono Nerd Font", monospace;
 }
 
+/* Base Button Grid Properties */
 button {
+    background-color: rgba(30, 34, 42, 0.5);
+    color: #ffffff;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     background-repeat: no-repeat;
     background-position: center;
-    font-size: 40px;
-    background-size: 60%;
-    border: none;
-    color: #d5b497;
-    text-shadow: none;
-    border-radius: 20px 20px 20px 20px;
-    background-color: rgba(121, 81, 1, 0);
-    margin-top: 120px;
-    margin-bottom: 120px;
-    transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
+    background-size: 25%;
+    margin: 10px;
+    transition: all 0.2s ease-in-out;
 }
 
+/* Hover, Focus, and Active Button Interactions */
+button:focus, 
+button:active, 
 button:hover {
-    background-color: rgba(184, 149, 80, 0.3);
-    background-size: 80%;
-    transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
+    background-color: rgba(0, 188, 212, 0.4); /* Cyan highlight color */
+    border: 2px solid #00bcd4;
+    color: #00bcd4;
+    outline: none;
 }
+
+/* --------------------------------------------------------------------------
+   Local Icon Asset Resolution Mappings
+   -------------------------------------------------------------------------- */
 
 #lock {
-    background-image: image(url("./icons/lock.png"));
+    background-image: url("icons/lock.png");
 }
 
 #logout {
-    background-image: image(url("./icons/logout.png"));
-}
-
-#logout:hover {
-    background-image: image(url("./icons/logout.png"));
+    background-image: url("icons/logout.png");
 }
 
 #suspend {
-    background-image: image(url("./icons/sleep.png"));
-} 
-
-#shutdown {
-    background-image: image(url("./icons/power.png"));
-}
-
-#reboot {
-    background-image: image(url("./icons/restart.png"));
+    background-image: url("icons/suspend.png");
 }
 
 #hibernate {
-    background-image: image(url("./icons/hibernate.png"));
+    background-image: url("icons/hibernate.png");
+}
+
+#shutdown {
+    background-image: url("icons/shutdown.png");
+}
+
+#reboot {
+    background-image: url("icons/reboot.png");
 }
