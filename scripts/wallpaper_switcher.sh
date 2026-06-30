@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+WALLPAPER_DIR="$HOME/.config/mango/wallpapers"
 THUMB_DIR="$HOME/.cache/wallpaper_thumbs"
 ROFI_THEME="$HOME/.config/mango/rofi/wallpaper-selector.rasi"
 MAPPING_FILE="/tmp/wallpaper_mapping_$$"
@@ -9,15 +9,9 @@ mkdir -p "$THUMB_DIR"
 trap 'rm -f "$MAPPING_FILE"' EXIT
 
 # ── dependency check ────────────────────────────────────────────────────────
-for cmd in rofi awww; do
+for cmd in rofi awww ffmpeg; do
     command -v "$cmd" &>/dev/null || { echo "$cmd is not installed."; exit 1; }
 done
-
-if ! command -v magick &>/dev/null && ! command -v convert &>/dev/null; then
-    echo "ImageMagick is required for thumbnail generation."
-    exit 1
-fi
-convert_cmd=$(command -v magick || command -v convert)
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 # Tab-delimited mapping: display_name \t full_path
@@ -108,27 +102,10 @@ if [[ ! -f "$selected_path" ]]; then
 fi
 
 # ── apply wallpaper ──────────────────────────────────────────────────────────
-# for swaybg
-# pkill -x swaybg 2>/dev/null
-# swaybg -i "$selected_path" -m fill &
-
 types=(wipe any)
 chosen=${types[$RANDOM % ${#types[@]}]}
 
 awww img "$selected_path" --transition-type "$chosen" --transition-fps 60 --transition-bezier 0.33,1.0,0.68,1.0 --transition-duration 1.6
 
-MANGO=/tmp/blurred_wall.jpg
-
-status=$(ps -C mango -o comm=)
-if [[ $status == "mango" ]]; then
-  ffmpeg -y -i "$selected_path" -vf "format=yuv420p,gblur=sigma=10,eq=contrast=1.1:saturation=1.4" -update 1 "$MANGO"
-  
-  # Check if the mango socket file actually exists before running awww
-  if [[ -S "/run/user/1000/wayland-0-awww-daemon.mango.sock" ]]; then
-    awww img --namespace mango "$MANGO" --transition-type "$chosen" --transition-fps 60 --transition-bezier 0.33,1.0,0.68,1.0 --transition-duration 1.6
-  else
-    echo "[WARN] awww-daemon mango socket not found. Skipping blurred background."
-  fi
-fi
-
-# sleep 1 && notify-send "Wallpaper changed" "$(basename "$selected_path")" -i "$selected_path"
+# Send notification using the newly selected background asset icon
+sleep 1 && notify-send "Wallpaper changed" "$(basename "$selected_path")" -i "$selected_path"
