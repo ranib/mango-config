@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Extract the active wallpaper path currently rendering via swww
-CURRENT_WALLPAPER=$(swww query | grep -oE '/home/[^ ]+\.(jpg|jpeg|png)' | head -n 1)
+# Query awww to see which picture asset path is currently rendered on screen
+CURRENT_WALLPAPER=$(awww query | grep -oE '/home/[^ ]+\.(jpg|jpeg|png|webp)' | head -n 1)
 
-# Safe fallback asset path if swww isn't initialized yet
+# Safe fallback image pointing inside your repository directory
 DEFAULT_WALLPAPER="$HOME/.config/mango/wallpapers/default.jpg"
 
 if [ -z "$CURRENT_WALLPAPER" ] || [ ! -f "$CURRENT_WALLPAPER" ]; then
     CURRENT_WALLPAPER="$DEFAULT_WALLPAPER"
 fi
 
-# Lock the desktop injecting the active background on the fly
+# Trigger Veila desktop secure locker using your native active display background
 veila lock --theme default --background "$CURRENT_WALLPAPER"
