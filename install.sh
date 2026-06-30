@@ -8,13 +8,14 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-REPO_URL="https://github.com/ranib/mango-config.git"
+REPO_URL="https://github.com"
 DOTFILES_DIR="$HOME/.dotfiles"
 CONFIG_DIR="$HOME/.config"
 
 echo -e "${GREEN}"
 cat << "EOF"
  __  __                                
+
 |  \/  |  __ _  _ __    __ _   ___     
 | |\/| | / _` || '_ \  / _` | / _ \    
 | |  | || (_| || | | || (_| || (_) |   
@@ -50,7 +51,7 @@ if ! command -v yay &> /dev/null; then
     echo -e "${BLUE}[2/8] Installing yay...${NC}"
     cd /tmp
     rm -rf yay
-    git clone https://aur.archlinux.org/yay.git
+    git clone https://archlinux.org
     cd yay
     makepkg -si --noconfirm
     cd ~
@@ -86,7 +87,7 @@ git clone "$REPO_URL" "$DOTFILES_DIR"
 echo -e "${BLUE}Creating symlinks...${NC}"
 mkdir -p "$CONFIG_DIR"
 
-declare -a configs=("btop" "fastfetch" "cava" "mango" "rofi" "swaylock" "swayosd" "themes" "waybar" "yazi" "mako")
+declare -a configs=("btop" "fastfetch" "cava" "mango" "rofi" "veila" "swayosd" "themes" "waybar" "yazi")
 
 for config in "${configs[@]}"; do
     if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
@@ -99,7 +100,7 @@ for config in "${configs[@]}"; do
     echo -e "${GREEN}✓ Linked $config${NC}"
 done
 
-# Install required packages
+# Install required packages (Includes Core Essentials)
 echo -e "${BLUE}[7/8] Installing required packages...${NC}"
 yay -S --needed --noconfirm \
     awww \
@@ -108,46 +109,49 @@ yay -S --needed --noconfirm \
     curl \
     fastfetch \
     btop \
-    dimland-git \
-    imagemagick-git \
     waybar \
     rofi \
     rofimoji \
     cliphist \
     libnotify \
-    mako \
-    swaybg \
     swayosd \
-    swaylock-effects-git \
+    veila-bin \
     swaync \
     swayidle \
-    sway-audio-idle-inhibit-git \
     slurp \
     satty \
-    sox \
     nano \
     nwg-look \
     ttf-jetbrains-mono \
     ttf-jetbrains-mono-nerd \
-    open-tv-bin \
     os-prober \
+    open-tv-bin \
     pavucontrol \
     waypaper \
     swww \
     foot \
     pamixer \
-    pulsemixer \
     grim \
     xdg-desktop-portal-wlr \
-    wlr-randr \
-    wlr-dpms \
     wl-clipboard \
-    wl-clip-persist \
     wlsunset \
     wlogout \
     xfce-polkit \
     zen-browser-bin \
-    zoxide
+    zoxide \
+    thunar \
+    gvfs \
+    gvfs-mtp \
+    tumbler \
+    pipewire-pulse \
+    wireplumber \
+    mpv \
+    network-manager-applet \
+    bluez \
+    bluez-utils \
+    blueman \
+    qt5-wayland \
+    qt6-wayland
 
 # Remove firefox gracefully if installed
 if pacman -Qq firefox &> /dev/null; then
@@ -155,22 +159,22 @@ if pacman -Qq firefox &> /dev/null; then
     sudo pacman -Rns --noconfirm firefox
 fi
 
-# Make fastfetch look like Archcraft with a vibrant multicolored Arch ASCII Logo
+# Make fastfetch look like Archcraft with native high-speed Foot ASCII Logo
 echo -e "${BLUE}Configuring Fastfetch...${NC}"
 cd /tmp
 rm -rf fastfetch-config
-git clone https://github.com/ExploitCraft/fastfetch-config.git
-mkdir -p ~/.config/fastfetch/images
+git clone https://github.com
+mkdir -p ~/.config/fastfetch
 cp -f fastfetch-config/config.jsonc ~/.config/fastfetch/config.jsonc
 
-# Safely inject a colorful 3-tone gradient (Cyan -> Blue -> Magenta) into the logo block
+# Inject clear, 3-tone gradient specifically built for text ASCII structures
 sed -i 's/"logo": {/"logo": {\n        "type": "auto",\n        "source": "arch",\n        "color": {\n            "1": "cyan",\n            "2": "blue",\n            "3": "magenta"\n        },/g' ~/.config/fastfetch/config.jsonc
 
 cd ~
 
 # Install starship for terminal    
 echo -e "${BLUE}Installing Starship prompt...${NC}"
-curl -sS https://starship.rs/install.sh | sh -s -- -y
+curl -sS https://starship.rs | sh -s -- -y
 
 # Ensure config directory exists for the local user
 mkdir -p "$HOME/.config"
@@ -220,7 +224,10 @@ else
     echo -e "${YELLOW}Warning: scripts directory not found${NC}"
 fi
 
-# Enable SDDM
+# Enable System Core Daemons
+echo -e "${BLUE}Enabling Bluetooth background service...${NC}"
+sudo systemctl enable --now bluetooth
+
 echo -e "${BLUE}Enabling SDDM...${NC}"
 sudo systemctl enable sddm
 
