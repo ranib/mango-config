@@ -67,13 +67,30 @@ else
     echo -e "${YELLOW}mangowc already installed, skipping...${NC}"
 fi
 
-# Install SDDM
-echo -e "${BLUE}[4/8] Installing SDDM...${NC}"
+# Install SDDM + SilentSDDM Theme Runtime Dependencies
+echo -e "${BLUE}[4/8] Installing SDDM, SilentSDDM, and Qt6 graphics layers...${NC}"
 if ! pacman -Qq sddm &> /dev/null; then
     yay -S --noconfirm sddm
 else
-    echo -e "${YELLOW}SDDM already installed, skipping...${NC}"
+    echo -e "${YELLOW}SDDM core already installed...${NC}"
 fi
+
+# Explicitly pull dependencies and the SilentSDDM Git engine from AUR
+# Installs qt6-svg, qt6-virtualkeyboard, qt6-multimedia-ffmpeg, qt6-imageformats
+sudo pacman -S --needed --noconfirm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats
+yay -S --noconfirm sddm-silent-theme-git
+
+# Deploy safe system configurations to activate the theme cleanly
+echo -e "${BLUE}[5/8] Injecting SilentSDDM theme targets into system architecture...${NC}"
+sudo mkdir -p /etc/sddm.conf.d
+cat << 'EOF' | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
+[General]
+InputMethod=qtvirtualkeyboard
+GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard
+
+[Theme]
+Current=silent
+EOF
 
 # Clone or move dotfiles straight into the Mango directory
 echo -e "${BLUE}[6/8] Organizing Mango configuration directory...${NC}"
@@ -89,19 +106,13 @@ echo -e "${BLUE}Cloning your repository cleanly into $CONFIG_DIR/mango...${NC}"
 git clone "$REPO_URL" "$CONFIG_DIR/mango"
 
 # Create symlinks out to global folders ONLY for global standalone tools
-echo -e "${BLUE}Linking global terminal utility layouts...${NC}"
-mkdir -p "$CONFIG_DIR"
-
-# Create symlinks out to global folders ONLY for global standalone tools
 echo -e "${BLUE}Linking global terminal and system utility layouts...${NC}"
 mkdir -p "$CONFIG_DIR"
 
 # Global system tools look for their setups at the root of ~/.config/
-# Added "swayidle" to this deployment array
 declare -a global_configs=("btop" "fastfetch" "foot" "swayidle")
 
 for config in "${global_configs[@]}"; do
-    # If the folder exists inside your nested repo layout, link it to the root
     if [ -d "$CONFIG_DIR/mango/$config" ]; then
         if [ -d "$CONFIG_DIR/$config" ] && [ ! -L "$CONFIG_DIR/$config" ]; then
             mv "$CONFIG_DIR/$config" "$CONFIG_DIR/${config}.backup.$(date +%s)"
@@ -113,7 +124,7 @@ for config in "${global_configs[@]}"; do
     fi
 done
 
-# Install required packages (Includes Core Essentials)
+# Install required packages (Includes Core Essentials + Thumbnail tools)
 echo -e "${BLUE}[7/8] Installing required packages...${NC}"
 yay -S --needed --noconfirm \
     awww \
@@ -122,6 +133,7 @@ yay -S --needed --noconfirm \
     curl \
     fastfetch \
     btop \
+    imagemagick-git \
     waybar \
     rofi \
     rofimoji \
@@ -138,7 +150,6 @@ yay -S --needed --noconfirm \
     ttf-jetbrains-mono \
     ttf-jetbrains-mono-nerd \
     os-prober \
-    open-tv-bin \
     pavucontrol \
     waypaper \
     swww \
@@ -153,6 +164,7 @@ yay -S --needed --noconfirm \
     zen-browser-bin \
     zoxide \
     thunar \
+    yazi \
     gvfs \
     gvfs-mtp \
     tumbler \
@@ -164,7 +176,8 @@ yay -S --needed --noconfirm \
     bluez-utils \
     blueman \
     qt5-wayland \
-    qt6-wayland
+    qt6-wayland \
+    ffmpeg
 
 # Remove firefox gracefully if installed
 if pacman -Qq firefox &> /dev/null; then
