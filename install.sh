@@ -110,7 +110,8 @@ echo -e "${BLUE}Linking global terminal and system utility layouts...${NC}"
 mkdir -p "$CONFIG_DIR"
 
 # Global system tools look for their setups at the root of ~/.config/
-declare -a global_configs=("btop" "fastfetch" "foot" "swayidle")
+# Added "wlogout" alongside your other independent apps
+declare -a global_configs=("btop" "fastfetch" "foot" "swayidle" "wlogout")
 
 for config in "${global_configs[@]}"; do
     if [ -d "$CONFIG_DIR/mango/$config" ]; then
