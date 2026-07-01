@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# ==========================================================================
+# Unified Lockscreen Integration Interface Script — Script File
+# ==========================================================================
+
 # Query awww to see which picture asset path is currently rendered on screen
 CURRENT_WALLPAPER=$(awww query | grep -oE '/home/[^ ]+\.(jpg|jpeg|png|webp)' | head -n 1)
 
