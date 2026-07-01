@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
 # ==========================================================================
-# MangoWM System Session Autostart Routine
+# MangoWM System Session Autostart Routine — Script File
 # ==========================================================================
 
 # ── 1. Wayland & D-Bus Environment Handlers ────────────────────────────────
-# Export system environmental variables to prevent broken window scaling, slow 
-# app launches, and broken screen sharing (OBS Studio / Discord) under wlroots.
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots &
 
 # Initialize security polkit layers to allow admin privilege prompts
@@ -14,7 +12,6 @@ dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 /usr/lib/xfce-polkit/xfce-polkit &
 
 # ── 2. XDG Desktop Portal Initialization ──────────────────────────────────
-# Clean-restart port handlers to ensure flawless slurp/grim screenshot integration
 killall -q xdg-desktop-portal-wlr xdg-desktop-portal
 sleep 0.5
 /usr/lib/xdg-desktop-portal-wlr &
@@ -31,32 +28,28 @@ gentle_run pipewire
 gentle_run wireplumber
 gentle_run pipewire-pulse
 
-# Clipboard History Daemons (Keeps text and image copies across windows)
+# Clipboard History Daemons
 gentle_run wl-paste --type text --watch cliphist store
 gentle_run wl-paste --type image --watch cliphist store
 
-# Network Manager applet to display connection icons in your top bar tray
+# Network Manager applet
 gentle_run nm-applet --indicator
 
 # ── 4. UI Elements & Panel Bars ──────────────────────────────────────────
-# Launch SwayNC notifications using your explicit nested themes
 swaync -c ~/.config/mango/swaync/config.jsonc -s ~/.config/mango/swaync/style.css >/dev/null 2>&1 &
-
-# Launch Waybar status bar pointing to your nested configuration variables
 waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
 
 # ── 5. Wallpaper & Idle Lockscreen Services ──────────────────────────────
-# Initialize your modern transitional background utility
 if ! pgrep -x "awww-daemon" > /dev/null; then
     awww-daemon &
     sleep 0.5
 fi
 
-# Load your custom randomized wallpaper right from your repo folder on boot
+# Load custom randomized wallpaper from your repo on boot
 bash ~/.config/mango/scripts/wallpaper_random.sh &
 
-# Initialize modern user-space service background daemon for Veila locker
+# Initialize user-space service background daemon for Veila locker
 systemctl --user enable --now veilad.service
 
-# Launch the idle listener to trigger your lockscreen after inactivity
+# Launch the idle listener
 swayidle -w &
