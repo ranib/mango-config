@@ -132,7 +132,6 @@ yay -S --needed --noconfirm \
     curl \
     fastfetch \
     btop \
-    imagemagick-git \
     waybar \
     rofi \
     rofimoji \
@@ -163,7 +162,6 @@ yay -S --needed --noconfirm \
     zen-browser-bin \
     zoxide \
     thunar \
-    yazi \
     gvfs \
     gvfs-mtp \
     tumbler \
@@ -188,7 +186,7 @@ fi
 echo -e "${BLUE}Configuring Fastfetch for Foot terminal environment...${NC}"
 mkdir -p "$CONFIG_DIR/fastfetch"
 if [ -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" ]; then
-    cp -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
+    cp -rf "$CONFIG_DIR/mango/fastfetch/config.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
     echo -e "${GREEN}✓ Fastfetch profile deployed from repository assets${NC}"
 else
     fastfetch --gen-config jsonc
