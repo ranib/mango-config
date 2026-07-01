@@ -187,10 +187,10 @@ echo -e "${BLUE}Configuring Fastfetch for Foot terminal environment...${NC}"
 mkdir -p "$CONFIG_DIR/fastfetch"
 if [ -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" ]; then
     #cp -rf "$CONFIG_DIR/mango/fastfetch/config.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
-    echo -e "${GREEN}✓ Fastfetch profile deployed from repository assets${NC}"
-else
-    fastfetch --gen-config jsonc
-fi
+    #echo -e "${GREEN}✓ Fastfetch profile deployed from repository assets${NC}"
+#else
+    #fastfetch --gen-config jsonc
+#fi
 
 # Install starship for terminal    
 echo -e "${BLUE}Installing Starship prompt...${NC}"
