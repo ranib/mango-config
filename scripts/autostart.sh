@@ -53,3 +53,6 @@ systemctl --user enable --now veilad.service
 
 # Launch the idle listener
 swayidle -w &
+
+# Run a quick check on your configuration files right at boot
+bash ~/.config/mango/scripts/config_check.sh &
