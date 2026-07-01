@@ -1,64 +1,72 @@
+/* ==========================================================================
+   Rofi Grid Visual Asset Image Picker Layout (wallpaper-selector.rasi)
+   ========================================================================== */
+
+configuration {
+    show-icons: true;
+}
+
+@theme "/dev/null"
+
 * {
+    bg: #1e222aff;
+    border-cyan: #00bcd4ff;
+    bg-hover: rgba(0, 188, 212, 0.15);
+    text-white: #ffffff;
+    
     background-color: transparent;
-    text-color: #fafafa;
-    font: " Google Sans Flex 12";
+    text-color: @text-white;
 }
 
 window {
-    width: 1000px;
-    padding: 40px;
-    border: none;
-    border-radius: 20px;
-    background-color: rgba(10,10,10,0.45);
+    background-color: @bg;
+    border: 2px;
+    border-color: @border-cyan;
+    border-radius: 8px;
+    width: 60%;
+    height: 55%;
+    padding: 20px;
+    font: "JetBrainsMono Nerd Font 10";
 }
 
 mainbox {
-    spacing: 16px;
-    children: [ inputbar, message, listview ];
-    background-color: transparent;
+    children: [ inputbar, listview ];
+    spacing: 15px;
 }
 
 inputbar {
-    enabled: true;
-    padding: 16px 12px;
-    border-radius: 12px;
-    background-color: rgba(255,255,255,0.08);
-    border: none;
-}
-
-entry {
-  placeholder: "Type here to search";
-  placeholder-color: rgba(255,255,255,0.6);
-  font: "Google Sans Flex 12";
+    enabled: false; /* Strips typing box for clear view of grids */
 }
 
 listview {
-    columns: 4;
+    layout: vertical;
+    grid-columns: 3; /* Displays thumbnails in structured grid matrix columns */
     lines: 3;
     cycle: true;
+    dynamic: true;
     scrollbar: false;
-    fixed-height: true;
-    background-color: transparent;
+    spacing: 15px;
 }
 
 element {
-    orientation: vertical;
-    border-radius: 12px;
-    background-color: transparent;
+    orientation: vertical; /* Forces icons (thumbnails) to stack cleanly above text labels */
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 element selected {
-    background-color: rgba(255,255,255,0.12);
-    border: none;
+    background-color: @bg-hover;
+    border-color: @border-cyan;
 }
 
 element-icon {
-    size: 160px;
-    border-radius: 12px;
+    size: 160px; /* Scale matches your ffmpeg 480:270 pixel aspect outputs ratio */
     horizontal-align: 0.5;
-    background-color: transparent;
 }
 
 element-text {
-    enabled : false;
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    padding: 5px 0px 0px 0px;
 }
