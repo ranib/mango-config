@@ -1,20 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# 获取mango命令输出并清理格式
+# ==========================================================================
+# MangoWM Configuration Linter & Health Check Script
+# ==========================================================================
+
+# Run the parser check and strip ANSI terminal artifacts dynamically
 output=$(mango -p 2>&1 | sed -r '
-    s/\x1b\[[0-9;]*[a-zA-Z]//g   # 移除ANSI颜色代码
-    s/   ╰─/ ╰─/g                # 压缩多余空格
-    s/^[[:space:]]*//            # 删除行首空格
-    s/[[:space:]]*$//            # 删除行尾空格
+    s/\x1b\[[0-9;]*[a-zA-Z]//g   # Strip ANSI coloring strings
+    s/   ╰─/ ╰─/g                # Flatten multi-character spacing arrays
+    s/^[[:space:]]*//            # Remove trailing left white space
+    s/[[:space:]]*$//            # Remove trailing right white space
 ')
 
-# 设置通知图标
-icon="$HOME/.config/mango/wallpaper/mango.png"
+# Path Corrected: Target your unified asset directory folder
+icon="$HOME/.config/mango/wallpapers/default.jpg"
 
-# 如果没有输出或输出为空，则退出
+# Exit cleanly if no structural syntax layout mistakes are detected
 if [[ -z "$output" ]]; then
     exit 0
 fi
 
-# 发送通知
-notify-send --urgency=critical --icon="$icon" "Mango Status" "$output"
+# Broadcast a persistent desktop system alert if things are broken
+notify-send --urgency=critical --icon="$icon" "Mango Configuration Status" "$output"
