@@ -90,7 +90,7 @@ fi
 
 # Explicitly pull runtime dependencies and the SilentSDDM Git engine from AUR
 sudo pacman -S --needed --noconfirm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats
-yay -S --noconfirm sddm-silent-theme
+yay -S --noconfirm sddm-silent-theme-git
 
 # Deploy safe system configurations to activate the SilentSDDM theme cleanly
 echo -e "${BLUE}Injecting SilentSDDM theme targets into system architecture...${NC}"
