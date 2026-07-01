@@ -1,58 +1,62 @@
-#!/bin/bash
-set +e
+#!/usr/bin/env bash
 
-# Launch primary daemon directly in the background
-awww-daemon >/dev/null 2>&1 &
+# ==========================================================================
+# MangoWM System Session Autostart Routine
+# ==========================================================================
+
+# ── 1. Wayland & D-Bus Environment Handlers ────────────────────────────────
+# Export system environmental variables to prevent broken window scaling, slow 
+# app launches, and broken screen sharing (OBS Studio / Discord) under wlroots.
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots &
+
+# Initialize security polkit layers to allow admin privilege prompts
+/usr/lib/xfce4/notifyd/xfce4-notifyd & 
+/usr/lib/xfce-polkit/xfce-polkit &
+
+# ── 2. XDG Desktop Portal Initialization ──────────────────────────────────
+# Clean-restart port handlers to ensure flawless slurp/grim screenshot integration
+killall -q xdg-desktop-portal-wlr xdg-desktop-portal
 sleep 0.5
-
-# Launch the mango namespace daemon directly in the background
-awww-daemon --namespace mango >/dev/null 2>&1 &
+/usr/lib/xdg-desktop-portal-wlr &
 sleep 0.5
+/usr/lib/xdg-desktop-portal &
 
-# Random Wallpaper at start
-spawn-sh-at-startup "sleep 1 && bash ~/.config/mango/scripts/wallpaper_random.sh"
+# ── 3. Sound & System Status Micro-Daemons ────────────────────────────────
+gentle_run() {
+    pgrep -x "$1" > /dev/null || "$@" &
+}
 
-# some env can't auto run the portal, so need this
-/usr/lib/xdg-desktop-portal-wlr  >/dev/null 2>&1 &
+# Core Pipewire Audio Server Architecture
+gentle_run pipewire
+gentle_run wireplumber
+gentle_run pipewire-pulse
 
-# notify
+# Clipboard History Daemons (Keeps text and image copies across windows)
+gentle_run wl-paste --type text --watch cliphist store
+gentle_run wl-paste --type image --watch cliphist store
+
+# Network Manager applet to display connection icons in your top bar tray
+gentle_run nm-applet --indicator
+
+# ── 4. UI Elements & Panel Bars ──────────────────────────────────────────
+# Launch SwayNC notifications using your explicit nested themes
 swaync -c ~/.config/mango/swaync/config.jsonc -s ~/.config/mango/swaync/style.css >/dev/null 2>&1 &
 
-# night light
-wlsunset -T 3501 -t 3500 >/dev/null 2>&1 &
-
-# wallpaper
-#swaybg -i ~/.config/mango/wallpaper/wallpaper.png >/dev/null 2>&1 &
-#swaybg -i ~/Pictures/Wallpapers/cartoon.jpg >/dev/null 2>&1 &
-
-# top bar
+# Launch Waybar status bar pointing to your nested configuration variables
 waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
 
+# ── 5. Wallpaper & Idle Lockscreen Services ──────────────────────────────
+# Initialize your modern transitional background utility
+if ! pgrep -x "awww-daemon" > /dev/null; then
+    awww-daemon &
+    sleep 0.5
+fi
 
-# xwayland dpi scale
-echo "Xft.dpi: 140" | xrdb -merge #dpi缩放
-# xrdb merge ~/.Xresources >/dev/null 2>&1
+# Load your custom randomized wallpaper right from your repo folder on boot
+bash ~/.config/mango/scripts/wallpaper_random.sh &
 
-# ime input
-fcitx5 --replace -d >/dev/null 2>&1 &
+# Initialize modern user-space service background daemon for Veila locker
+systemctl --user enable --now veilad.service
 
-# keep clipboard content
-wl-clip-persist --clipboard regular --reconnect-tries 0 >/dev/null 2>&1 &
-
-# clipboard content manager
-wl-paste --type text --watch cliphist store >/dev/null 2>&1 &
-
-# bluetooth 
-blueman-applet >/dev/null 2>&1 &
-
-# network
-nm-applet >/dev/null 2>&1 &
-
-# Permission authentication
-/usr/lib/xfce-polkit/xfce-polkit >/dev/null 2>&1 &
-
-# inhibit by audio
-sway-audio-idle-inhibit >/dev/null 2>&1 &
-
-# change light value and volume value by swayosd-client in keybind
-swayosd-server >/dev/null 2>&1 &
+# Launch the idle listener to trigger your lockscreen after inactivity
+swayidle -w &
