@@ -246,7 +246,7 @@ fi
 
 if [ -d "$CONFIG_DIR/mango/scripts" ]; then
     chmod +x "$CONFIG_DIR/mango/scripts"/*.sh
-    echo -e "${GREEN}✓ Core scripts are now executable${NC}"
+    echo -e "${GREEN}✓ All core utility and autostart scripts are now executable${NC}"
 else
     echo -e "${YELLOW}Warning: scripts directory not found${NC}"
 fi
