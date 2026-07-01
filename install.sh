@@ -8,7 +8,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-REPO_URL="https://github.com"
+REPO_URL="https://github.com/ranib/mango-config.git"
 CONFIG_DIR="$HOME/.config"
 
 echo -e "${GREEN}"
