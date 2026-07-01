@@ -90,7 +90,7 @@ fi
 
 # Explicitly pull runtime dependencies and the SilentSDDM Git engine from AUR
 sudo pacman -S --needed --noconfirm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg qt6-imageformats
-yay -S --noconfirm sddm-silent-theme-git
+yay -S --noconfirm sddm-silent-theme
 
 # Deploy safe system configurations to activate the SilentSDDM theme cleanly
 echo -e "${BLUE}Injecting SilentSDDM theme targets into system architecture...${NC}"
@@ -222,18 +222,18 @@ else
 fi
  
 # Make scripts executable
-echo -e "${BLUE}Enforcing script permissions...${NC}"
-if [ -d "$CONFIG_DIR/mango/rofi" ]; then
-    chmod +x "$CONFIG_DIR/mango/rofi"/*.sh
-    echo -e "${GREEN}✓ Rofi scripts are now executable${NC}"
-fi
+#echo -e "${BLUE}Enforcing script permissions...${NC}"
+#if [ -d "$CONFIG_DIR/mango/rofi" ]; then
+    #chmod +x "$CONFIG_DIR/mango/rofi"/*.sh
+    #echo -e "${GREEN}✓ Rofi scripts are now executable${NC}"
+#fi
 
-if [ -d "$CONFIG_DIR/mango/scripts" ]; then
-    chmod +x "$CONFIG_DIR/mango/scripts"/*
-    echo -e "${GREEN}✓ All core utility, fix-keys, and autostart scripts are now executable${NC}"
-else
-    echo -e "${YELLOW}Warning: scripts directory not found${NC}"
-fi
+#if [ -d "$CONFIG_DIR/mango/scripts" ]; then
+    #chmod +x "$CONFIG_DIR/mango/scripts"/*
+    #echo -e "${GREEN}✓ All core utility, fix-keys, and autostart scripts are now executable${NC}"
+#else
+    #echo -e "${YELLOW}Warning: scripts directory not found${NC}"
+#fi
 
 # Enable System Core Daemons
 echo -e "${BLUE}Enabling Bluetooth background service...${NC}"
