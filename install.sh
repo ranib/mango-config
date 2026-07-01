@@ -64,7 +64,7 @@ if ! command -v yay &> /dev/null; then
     echo -e "${BLUE}[4/8] Installing yay AUR helper...${NC}"
     cd /tmp
     rm -rf yay
-    git clone https://archlinux.org
+    git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si --noconfirm
     cd ~
