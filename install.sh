@@ -186,13 +186,21 @@ if pacman -Qq firefox &> /dev/null; then
     sudo pacman -Rns --noconfirm firefox
 fi
 
-# Make fastfetch look like Archcraft with native high-speed Foot ASCII Logo
-echo -e "${BLUE}Configuring Fastfetch...${NC}"
-cd /tmp
-rm -rf fastfetch-config
-git clone https://github.com
-mkdir -p ~/.config/fastfetch
-cp -f fastfetch-config/config.jsonc ~/.config/fastfetch/config.jsonc
+# Make fastfetch look like Archcraft using your native, Foot-optimized configuration
+echo -e "${BLUE}Configuring Fastfetch for Foot terminal environment...${NC}"
+
+# Ensure global directory target exists
+mkdir -p "$CONFIG_DIR/fastfetch"
+
+# Copy your perfect version directly from your repository asset subfolder
+if [ -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" ]; then
+    cp -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
+    echo -e "${GREEN}✓ Fastfetch profile deployed from repository assets${NC}"
+else
+    # Safety fallback rule in case the file wasn't added to the repo layout yet
+    echo -e "${YELLOW}Warning: mango/fastfetch/config.jsonc not found in repo! Generating default...${NC}"
+    fastfetch --gen-config jsonc
+fi
 
 # Inject clear, 3-tone gradient specifically built for text ASCII structures
 sed -i 's/"logo": {/"logo": {\n        "type": "auto",\n        "source": "arch",\n        "color": {\n            "1": "cyan",\n            "2": "blue",\n            "3": "magenta"\n        },/g' ~/.config/fastfetch/config.jsonc
