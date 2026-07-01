@@ -183,9 +183,9 @@ if pacman -Qq firefox &> /dev/null; then
 fi
 
 # Make fastfetch look like Archcraft using your native, Foot-optimized configuration
-echo -e "${BLUE}Configuring Fastfetch for Foot terminal environment...${NC}"
-mkdir -p "$CONFIG_DIR/fastfetch"
-if [ -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" ]; then
+#echo -e "${BLUE}Configuring Fastfetch for Foot terminal environment...${NC}"
+#mkdir -p "$CONFIG_DIR/fastfetch"
+#if [ -f "$CONFIG_DIR/mango/fastfetch/config.jsonc" ]; then
     #cp -rf "$CONFIG_DIR/mango/fastfetch/config.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
     #echo -e "${GREEN}✓ Fastfetch profile deployed from repository assets${NC}"
 #else
