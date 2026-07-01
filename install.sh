@@ -193,13 +193,13 @@ fi
 #fi
 
 # Install starship for terminal    
-echo -e "${BLUE}Installing Starship prompt...${NC}"
-curl -sS https://starship.rs | sh -s -- -y
+#echo -e "${BLUE}Installing Starship prompt...${NC}"
+#curl -sS https://starship.rs | sh -s -- -y
 
 # Generate the Pastel Powerline configuration natively
-echo -e "${BLUE}Applying Pastel Powerline preset...${NC}"
-starship preset pastel-powerline -o "$HOME/.config/starship.toml"
-echo -e "${GREEN}✓ Starship initialized with Pastel Powerline!${NC}"
+#echo -e "${BLUE}Applying Pastel Powerline preset...${NC}"
+#starship preset pastel-powerline -o "$HOME/.config/starship.toml"
+#echo -e "${GREEN}✓ Starship initialized with Pastel Powerline!${NC}"
 
 # Automate GRUB edits
 echo -e "${BLUE}Configuring GRUB settings...${NC}"
