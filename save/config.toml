@@ -1,147 +1,26 @@
-[bar.default]
-auto_hide = true
-background_opacity = 0.4999999888241291
-end = [
-    "group:g1",
-    "tray",
-    "notifications",
-    "clipboard",
-    "network",
-    "bluetooth",
-    "volume",
-    "brightness",
-    "battery",
-    "control-center",
-    "session"
-]
-font_weight = 600
-layer = "overlay"
-margin_edge = 3
-margin_ends = 3
-reserve_space = false
-scale = 1.1500000096857548
-shadow = false
+[terminal]
+# The VT to run the greeter on. Can be "next", "current" or a number
+# designating the VT.
+vt = 1
 
-    [[bar.default.capsule_group]]
-    fill = "surface_variant"
-    id = "g1"
-    members = [ "sysmon", "media" ]
-    opacity = 1.0
-    padding = 6.0
+# The default session, also known as the greeter.
 
-[dock]
-shadow = false
+# `agreety` is the bundled agetty/login-lookalike. You can replace `/bin/sh`
+# with whatever you want started, such as `sway`.
+#command = "agreety --cmd /bin/sh"
 
-[idle]
-behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+# The user to run the command as. The privileges this user must have depends
+# on the greeter. A graphical greeter may for example require the user to be
+# in the `video` group.
 
-    [idle.behavior.lock]
-    action = "lock"
-    enabled = true
-    timeout = 600.0
+[default_session]
+command = "/usr/local/bin/noctalia-greeter-session"
+user = "greeter"
 
-    [idle.behavior.lock-and-suspend]
-    action = "lock_and_suspend"
-    enabled = true
-    timeout = 900.0
+command = "/usr/bin/noctalia-greeter-session -- --session mango"
 
-    [idle.behavior.screen-off]
-    action = "screen_off"
-    enabled = true
-    timeout = 660.0
+[output]
+scale = 1.5
 
-[location]
-address = "Meadows Place, TX"
-
-[lockscreen_widgets]
-enabled = true
-schema_version = 2
-widget_order = [ "lockscreen-login-box@HDMI-A-3", "lockscreen-login-box@DP-1" ]
-
-    [lockscreen_widgets.grid]
-    cell_size = 16
-    major_interval = 4
-    visible = true
-
-    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
-    box_height = 70.0
-    box_width = 400.0
-    cx = 1920.0
-    cy = 2041.0
-    output = "DP-1"
-    rotation = 0.0
-    type = "login_box"
-
-        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
-        background_color = "surface_variant"
-        background_opacity = 0.88
-        background_radius = 12.0
-        input_opacity = 1.0
-        input_radius = 6.0
-        show_caps_lock = true
-        show_keyboard_layout = true
-        show_login_button = true
-        show_password_hint = true
-
-    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-3"]
-    box_height = 70.0
-    box_width = 400.0
-    cx = 960.0
-    cy = 961.0
-    output = "HDMI-A-3"
-    rotation = 0.0
-    type = "login_box"
-
-        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-3".settings]
-        background_color = "surface_variant"
-        background_opacity = 0.88
-        background_radius = 12.0
-        input_opacity = 1.0
-        input_radius = 6.0
-        show_caps_lock = true
-        show_keyboard_layout = true
-        show_login_button = true
-        show_password_hint = true
-
-[shell]
-settings_show_advanced = true
-time_format = "{:%I:%M %p}"
-ui_scale = 1.1000000089406967
-
-    [shell.panel]
-    shadow = false
-
-[theme]
-builtin = "Catppuccin"
-source = "wallpaper"
-
-    [theme.templates]
-    builtin_ids = [ "foot", "gtk3", "gtk4", "mango", "qt", "starship" ]
-    community_ids = [ "zen-browser", "rofi" ]
-
-[wallpaper.automation]
-enabled = true
-
-[wallpaper.default]
-path = "/home/nbpan/Pictures/Wallpapers/default.jpg"
-
-[wallpaper.last]
-path = "/home/nbpan/Pictures/Wallpapers/default.jpg"
-
-[wallpaper.monitors.DP-1]
-path = "/home/nbpan/Pictures/Wallpapers/default.jpg"
-
-[wallpaper.monitors.HDMI-A-3]
-path = "/home/nbpan/Pictures/Wallpapers/default.jpg"
-
-[weather]
-unit = "imperial"
-
-[widget.clock]
-format = "{:%I:%M %p}"
-
-[widget.media]
-hide_when_no_media = true
-
-[widget.network]
-show_label = false
+[default_session]
+command = "env XCURSOR_THEME=Adwaita XCURSOR_SIZE=24 /usr/bin/noctalia-greeter-session"
